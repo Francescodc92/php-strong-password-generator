@@ -22,9 +22,9 @@
     <h1 class="text-center pt-5">Strong Password Generator</h1>
     <h2 class="text-center mt-2">Genera una password sicura </h2>
 
-    <p class="mt-5 bg-info bg-opacity-75 px-2 py-3 rounded text-white fw-bold">
+    <p class="mt-5 bg-info bg-opacity-75 px-2 py-3 rounded text-white fw-bold text-wrap">
       Password Generata :
-      <span class="text-success">
+      <span class="text-success ">
         <?php 
           if(isset($randomPasswordEndMaxLangth)){
             echo $randomPasswordEndMaxLangth['password'];

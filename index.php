@@ -2,19 +2,15 @@
   session_start();
   require_once __DIR__ .'/helpers/function.php';
 
-  if(isset($_GET['passwordLength'])){
-    $charsNumber ='0123456789';
-    $charsLetters = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
-    $charsSpecials ='!@#$%^&*()';
-    
+  if(isset($_GET['passwordLength'])){    
     $passwordLength = (int) $_GET['passwordLength'];
     $repeatPermission = ($_GET['acceptRepetitions'] ?? 'true') === 'true' ? true : false ;
-    $passWhitNumbers = ($_GET['number'] ?? true)  == 'on' ? true : false ;
-    $passWhitLetters = ($_GET['letters'] ?? false)  == 'on' ? true : false ;
-    $passWhitSpecials = ($_GET['specials'] ?? false)  == 'on' ? true : false ;
-    $randomPasswordEndMaxLangth = passwordGenerator($passwordLength,$passWhitNumbers, $passWhitLetters, $passWhitSpecials, $repeatPermission );
+    $passWithNumbers = ($_GET['number'] ?? true)  == 'on' ? true : false ;
+    $passWithLetters = ($_GET['letters'] ?? false)  == 'on' ? true : false ;
+    $passWithSpecials = ($_GET['specials'] ?? false)  == 'on' ? true : false ;
+    $randomPasswordEndMaxLangth = passwordGenerator($passwordLength,$passWithNumbers, $passWithLetters, $passWithSpecials, $repeatPermission );
     $_SESSION['randomPasswordEndMaxLangth'] = $randomPasswordEndMaxLangth;
-    header("Location: " . './results.php');
+    
   }
 ?>
 
@@ -47,36 +43,6 @@
               id="passwordLength" 
               name="passwordLength" 
               min="0"
-              max="<?php
-
-                if(isset($passWhitNumbers) && isset($passWhitLetters) && isset($passWhitSpecials) ){
-
-                  if($passWhitNumbers && $passWhitLetters){
-                    $maxLenght = strlen($charsNumber .= $charsLetters );
-                    echo $maxLenght;
-                    
-                  }elseif( $passWhitLetters && $passWhitSpecials){
-                    $maxLenght = strlen($charsSpecials.= $charsLetters );
-                    echo $maxLenght;
-  
-                  }elseif($passWhitNumbers && $passWhitSpecials){
-                    $maxLenght = strlen($charsSpecials.= $charsLetters );
-                    echo $maxLenght;
-                  }elseif ($passWhitNumbers) {
-                   $maxLenght = strlen($charsNumber);
-                    echo $maxLenght;
-  
-                  }elseif($passWhitLetters){
-                    $maxLenght = strlen($charsLetters);
-                    echo $maxLenght;
-                  
-                  }elseif($passWhitSpecials){
-                   $maxLenght = strlen($charsSpecials);
-                    echo $maxLenght;
-                  
-                  }
-                }
-              ?>" 
               value="<?= isset($passwordLength) ? (string) $passwordLength : '';?>"
             >
           </div>
@@ -119,7 +85,7 @@
               id="number" 
               autocomplete="off" 
               name="number"
-              <?= isset($passWhitNumbers) && $passWhitNumbers ? 'checked' : ''?>
+              <?= isset($passWithNumbers) && $passWithNumbers ? 'checked' : ''?>
             >
             <label class="btn btn-outline-primary" for="number">Numeri</label>
 
@@ -129,7 +95,7 @@
               id="letters"
               name="letters" 
               autocomplete="off"
-              <?= isset($passWhitLetters) && $passWhitLetters ? 'checked' : ''?>
+              <?= isset($passWithLetters) && $passWithLetters ? 'checked' : ''?>
             >
             <label class="btn btn-outline-primary" for="letters">Lettere</label>
 
@@ -139,7 +105,7 @@
               id="specials" 
               name="specials"  
               autocomplete="off"
-              <?= isset($passWhitSpecials) && $passWhitSpecials ? 'checked' : ''?>
+              <?= isset($passWithSpecials) && $passWithSpecials ? 'checked' : ''?>
             >
             <label class="btn btn-outline-primary" for="specials">caratteri speciali</label>
           </div>

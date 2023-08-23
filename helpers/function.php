@@ -1,24 +1,24 @@
 <?php 
-  function passwordGenerator($passLength, $passWhitNumbers, $passWhitLetters, $passWhitSpecials, $repeatPermission) {
+  function passwordGenerator($passLength, $passWithNumbers, $passWithLetters, $passWithSpecials, $repeatPermission) {
       $randomPassword = '';
       $charsNumber ='0123456789';
       $charsLetters = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
       $charsSpecials ='!@#$%^&*()';
       $charsAccepted = '';
 
-      if ($passWhitNumbers) {
+      if ($passWithNumbers) {
         $charsAccepted .= $charsNumber;
       }
 
-      if ($passWhitLetters) {
+      if ($passWithLetters) {
           $charsAccepted .= $charsLetters;
       }
 
-      if ($passWhitSpecials) {
+      if ($passWithSpecials) {
           $charsAccepted .= $charsSpecials;
       }
 
-      while (strlen($randomPassword) < $passLength) {
+      while (strlen($randomPassword) < $passLength ) {
         $randomIndex = rand(0, strlen($charsAccepted) - 1);
 
         if(!$repeatPermission && strpos($randomPassword, $charsAccepted[$randomIndex]) === false){
@@ -27,12 +27,14 @@
         
         }elseif($repeatPermission){
           $randomPassword .= $charsAccepted[$randomIndex];
+        }elseif(!$repeatPermission && strlen($randomPassword) == strlen($charsAccepted)){
+          break;
         }
 
       }
 
     
-      
+      header("Location: " . './results.php');
       return [
         'password' => $randomPassword, 
         'maxValueAcepted' => strlen($charsAccepted), 
