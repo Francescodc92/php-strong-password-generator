@@ -5,40 +5,22 @@
     $charsLetters = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
     $charsSpecials ='!@#$%^&*()';
     $charsAccepted = '';
-    if($passWhitNumbers && $passWhitLetters == false && $passWhitSpecials == false){
-
+    if ($passWhitNumbers) {
       $charsAccepted .= $charsNumber;
-    
-    }elseif($passWhitNumbers == false && $passWhitLetters && $passWhitSpecials == false){
-    
-      $charsAccepted .= $charsLetters;
-    
-    }elseif($passWhitNumbers == false && $passWhitLetters == false && $passWhitSpecials ){
-    
-      $charsAccepted .= $charsSpecials;
-    
-    }elseif($passWhitNumbers && $passWhitLetters && $passWhitSpecials == false){
-    
-      $charsAccepted .= $charsNumber .= $charsLetters;
-    
-    }elseif($passWhitNumbers == false && $passWhitLetters && $passWhitSpecials ){
-    
-      $charsAccepted .= $charsLetters .= $charsSpecials;
-    
-    }elseif($passWhitNumbers  && $passWhitLetters == false && $passWhitSpecials ){
-    
-      $charsAccepted .=  $charsNumber .= $charsSpecials;
-    
-    }elseif($passWhitNumbers && $passWhitLetters && $passWhitSpecials){
-    
-      $charsAccepted .= $charsNumber .= $charsLetters .= $charsSpecials;
-    
+    }
+
+    if ($passWhitLetters) {
+        $charsAccepted .= $charsLetters;
+    }
+
+    if ($passWhitSpecials) {
+        $charsAccepted .= $charsSpecials;
     }
 
     while (strlen($randomPassword) < $passLength) {
       $randomIndex = rand(0, strlen($charsAccepted) - 1);
 
-      if(!strpos($randomPassword, $charsAccepted[$randomIndex])){
+      if(strpos($randomPassword, $charsAccepted[$randomIndex]) === false){
         $randomPassword .= $charsAccepted[$randomIndex];
       }
     }
