@@ -1,44 +1,15 @@
 <?php
-  function passwordGenerator($passLength, $passWhitNumbers, $passWhitLetters, $passWhitSpecials) {
-    $randomPassword = '';
-    $charsNumber ='0123456789';
-    $charsLetters = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
-    $charsSpecials ='!@#$%^&*()';
-    $charsAccepted = '';
-    if ($passWhitNumbers) {
-      $charsAccepted .= $charsNumber;
-    }
-
-    if ($passWhitLetters) {
-        $charsAccepted .= $charsLetters;
-    }
-
-    if ($passWhitSpecials) {
-        $charsAccepted .= $charsSpecials;
-    }
-
-    while (strlen($randomPassword) < $passLength) {
-      $randomIndex = rand(0, strlen($charsAccepted) - 1);
-
-      if(strpos($randomPassword, $charsAccepted[$randomIndex]) === false){
-        $randomPassword .= $charsAccepted[$randomIndex];
-      }
-    }
-
-
-
-    return [
-            'password' => $randomPassword, 
-            'maxValueAcepted' => strlen($charsAccepted), 
-          ];
-  };
+  session_start();
+  require_once __DIR__ .'/helpers/function.php';
 
   if(isset($_GET['passwordLength'])){
     $passwordLength = (int) $_GET['passwordLength'];
     $passWhitNumbers = true;
     $passWhitLetters = true;
     $passWhitSpecials = true;
-    $randomPassword = passwordGenerator($passwordLength,$passWhitNumbers, $passWhitLetters, $passWhitSpecials );
+    $randomPasswordEndMaxLangth = passwordGenerator($passwordLength,$passWhitNumbers, $passWhitLetters, $passWhitSpecials );
+    $_SESSION['randomPasswordEndMaxLangth'] = $randomPasswordEndMaxLangth;
+    header("Location: " . './results.php');
   }
 ?>
 
@@ -57,22 +28,6 @@
   <div class="container">
     <h1 class="text-center pt-5">Strong Password Generator</h1>
     <h2 class="text-center mt-2">Genera una password sicura </h2>
-
-    <p class="mt-5 bg-info bg-opacity-50 px-2 py-3 rounded text-white fw-bold">
-      Password Generata :
-      <span class="text-danger">
-        <?php 
-          if(isset($passwordLength)){
-            echo $randomPassword['password'];
-          }else{
-            echo 'nessun parametro valido inserito';
-          }
-        
-        ?>
-      </span>
-      
-    </p>
-
     <div class="row">
       <div class="coll">
         <form class="mt-5 bg-white p-3 rounded" action="index.php" method="get">
@@ -86,7 +41,7 @@
               id="passwordLength" 
               name="passwordLength" 
               min="0"
-              max="<?=$randomPassword['maxValueAcepted'] ?? '72'?>" 
+              max="<?=$randomPasswordEndMaxLangth['maxValueAcepted'] ?? '72'?>" 
               value="<?php 
                   if(isset($passwordLength)){
                     echo (string) $passwordLength;
