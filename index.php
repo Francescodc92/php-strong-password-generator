@@ -3,11 +3,16 @@
   require_once __DIR__ .'/helpers/function.php';
 
   if(isset($_GET['passwordLength'])){
+    $charsNumber ='0123456789';
+    $charsLetters = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+    $charsSpecials ='!@#$%^&*()';
+    
     $passwordLength = (int) $_GET['passwordLength'];
-    $passWhitNumbers = true;
-    $passWhitLetters = true;
-    $passWhitSpecials = true;
-    $randomPasswordEndMaxLangth = passwordGenerator($passwordLength,$passWhitNumbers, $passWhitLetters, $passWhitSpecials );
+    $repeatPermission = ($_GET['acceptRepetitions'] ?? 'true') === 'true' ? true : false ;
+    $passWhitNumbers = ($_GET['number'] ?? true)  == 'on' ? true : false ;
+    $passWhitLetters = ($_GET['letters'] ?? false)  == 'on' ? true : false ;
+    $passWhitSpecials = ($_GET['specials'] ?? false)  == 'on' ? true : false ;
+    $randomPasswordEndMaxLangth = passwordGenerator($passwordLength,$passWhitNumbers, $passWhitLetters, $passWhitSpecials, $repeatPermission );
     $_SESSION['randomPasswordEndMaxLangth'] = $randomPasswordEndMaxLangth;
     header("Location: " . './results.php');
   }
@@ -23,6 +28,7 @@
   <!--style css-->
   <link rel="stylesheet" href="./CSS/style.css">
   <title>PHP Strong Password Generator</title>
+
 </head>
 <body class="bg-primary bg-gradient vh-100">
   <div class="container">
@@ -41,20 +47,111 @@
               id="passwordLength" 
               name="passwordLength" 
               min="0"
-              max="<?=$randomPasswordEndMaxLangth['maxValueAcepted'] ?? '72'?>" 
-              value="<?php 
-                  if(isset($passwordLength)){
-                    echo (string) $passwordLength;
+              max="<?php
+
+                if(isset($passWhitNumbers) && isset($passWhitLetters) && isset($passWhitSpecials) ){
+
+                  if($passWhitNumbers && $passWhitLetters){
+                    $maxLenght = strlen($charsNumber .= $charsLetters );
+                    echo $maxLenght;
+                    
+                  }elseif( $passWhitLetters && $passWhitSpecials){
+                    $maxLenght = strlen($charsSpecials.= $charsLetters );
+                    echo $maxLenght;
+  
+                  }elseif($passWhitNumbers && $passWhitSpecials){
+                    $maxLenght = strlen($charsSpecials.= $charsLetters );
+                    echo $maxLenght;
+                  }elseif ($passWhitNumbers) {
+                   $maxLenght = strlen($charsNumber);
+                    echo $maxLenght;
+  
+                  }elseif($passWhitLetters){
+                    $maxLenght = strlen($charsLetters);
+                    echo $maxLenght;
+                  
+                  }elseif($passWhitSpecials){
+                   $maxLenght = strlen($charsSpecials);
+                    echo $maxLenght;
+                  
                   }
-              ?>"
+                }
+              ?>" 
+              value="<?= isset($passwordLength) ? (string) $passwordLength : '';?>"
             >
           </div>
-          <button type="submit" class="btn btn-primary">
-            Genera Password
-          </button>
-          <button type="button" class="btn btn-secondary">
-            Annulla
-          </button>
+          <div class="form-check">
+            
+            <input 
+              class="form-check-input" 
+              type="radio" 
+              name="acceptRepetitions" 
+              id="acceptRepetitions1" 
+              value="true" 
+              <?= isset($repeatPermission) &&  $repeatPermission ? 'checked': '' ?> 
+            >
+
+            <label class="form-check-label" for="acceptRepetitions1">
+               permetti ripetizioni di caratteri
+            </label>
+          </div>
+          <div class="form-check mb-3">
+
+            <input 
+              class="form-check-input" 
+              type="radio" 
+              name="acceptRepetitions" 
+              id="acceptRepetitions2" 
+              value="false" 
+              <?= isset($repeatPermission) &&  $repeatPermission ? '': 'checked' ?> 
+            >
+
+            <label class="form-check-label" for="acceptRepetitions2">
+              non permettere ripetizioni di caratteri
+            </label>
+
+          </div>
+          <p class="mb-2">La password potrà contenere?<span class="text-info fs-6 fst-italic">seleziona almeno 1 o più tipi di caratteri</span> </p>
+          <div class="btn-group" role="group" aria-label="Basic checkbox toggle button group">
+            <input 
+              type="checkbox" 
+              class="btn-check" 
+              id="number" 
+              autocomplete="off" 
+              name="number"
+              <?= isset($passWhitNumbers) && $passWhitNumbers ? 'checked' : ''?>
+            >
+            <label class="btn btn-outline-primary" for="number">Numeri</label>
+
+            <input 
+              type="checkbox" 
+              class="btn-check" 
+              id="letters"
+              name="letters" 
+              autocomplete="off"
+              <?= isset($passWhitLetters) && $passWhitLetters ? 'checked' : ''?>
+            >
+            <label class="btn btn-outline-primary" for="letters">Lettere</label>
+
+            <input 
+              type="checkbox" 
+              class="btn-check" 
+              id="specials" 
+              name="specials"  
+              autocomplete="off"
+              <?= isset($passWhitSpecials) && $passWhitSpecials ? 'checked' : ''?>
+            >
+            <label class="btn btn-outline-primary" for="specials">caratteri speciali</label>
+          </div>
+
+          <div class="mt-3">
+            <button type="submit" class="btn btn-primary">
+              Genera Password
+            </button>
+            <button type="button" class="btn btn-secondary">
+              Annulla
+            </button>
+          </div>
         </form>
       </div>
     </div>

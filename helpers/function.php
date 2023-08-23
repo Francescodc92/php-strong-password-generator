@@ -1,5 +1,5 @@
 <?php 
-  function passwordGenerator($passLength, $passWhitNumbers, $passWhitLetters, $passWhitSpecials) {
+  function passwordGenerator($passLength, $passWhitNumbers, $passWhitLetters, $passWhitSpecials, $repeatPermission) {
       $randomPassword = '';
       $charsNumber ='0123456789';
       $charsLetters = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
@@ -21,9 +21,14 @@
       while (strlen($randomPassword) < $passLength) {
         $randomIndex = rand(0, strlen($charsAccepted) - 1);
 
-        if(strpos($randomPassword, $charsAccepted[$randomIndex]) === false){
+        if(!$repeatPermission && strpos($randomPassword, $charsAccepted[$randomIndex]) === false){
+         
+          $randomPassword .= $charsAccepted[$randomIndex];
+        
+        }elseif($repeatPermission){
           $randomPassword .= $charsAccepted[$randomIndex];
         }
+
       }
 
     
